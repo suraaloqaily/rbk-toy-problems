@@ -1,3 +1,27 @@
+
+function each(coll, f) {
+  if (Array.isArray(coll)) {
+    for (var i = 0; i < coll.length; i++) {
+      f(coll[i], i);
+    }
+  } else {
+    for (var key in coll) {
+      f(coll[key], key);
+    }
+  }
+}
+
+function reduce(array, f, acc) { 
+ if (acc === undefined) { 
+   acc = array[0]; 
+   array = array.slice(1); 
+ } 
+ each(array, function(element, i) { 
+   acc = f(acc, element, i); 
+ }); 
+ return acc; 
+}
+
 /*
 You were put in charge of ordering for tonight's company get-together, 
 and you were given a data set with people's meal preferences and dietary restrictions. 
@@ -37,3 +61,9 @@ orderAVegetarianDish(staffA); //true
 */
 
 // your answer is here 
+
+function orderAVegetarianDish(array){
+  return reduce (array ,function(result,object){
+    return  result || object.mealPreferences==="vegetarian"
+  },false)
+}
