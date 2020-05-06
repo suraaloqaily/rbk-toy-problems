@@ -1,3 +1,65 @@
+//Improved each
+function each(coll, f) {
+  if (Array.isArray(coll)) {
+    for (var i = 0; i < coll.length; i++) {
+      f(coll[i], i);
+    }
+  } else {
+    for (var key in coll) {
+      f(coll[key], key);
+    }
+  }
+}
+
+
+//Improved map
+function map(coll,f){
+
+var acc=[];
+if(!Array.isArray(coll)) {
+acc={}
+}
+each (coll,function(element,key){
+  acc[key]=f(element,key)
+})
+return acc;
+}
+
+
+
+//Improved Filter
+function filter(coll, predicate) {
+  var acc = []
+  if(!Array.isArray(coll)){
+    acc = {}
+  }
+  each(coll,function(element,key){
+    if (predicate(element,key)){
+      if (!Array.isArray(coll)){
+         acc[key] = element
+      }else{
+    acc.push(element)
+    }
+    }
+  })
+  return acc
+}
+
+// Improved reduce
+function reduce (array,f,acc){
+
+  if (acc===undefined){
+    acc=array[0]
+    array=array.slice(1)
+  }
+
+  each(array,function(element,i){
+    acc=f(acc,element,i)
+  });
+
+  return acc;
+}
+
 /*
 
 Exercise 1
@@ -14,7 +76,7 @@ so there's no item limit -- your only limit is your budget.
 The list is mentioned to be in "decreasing priority" simply because you do not have to sort the input array to optimize for anything else.
  So do not worry about coming up with any other sorting algorithm for the most "bang for your buck" or what not :-)
 Take for example the data below:
-
+*/
 var shoppingList = [
   {
     item: "rice",
@@ -46,12 +108,23 @@ var shoppingList = [
     price: 2.55,
     weightInPounds: 2
   }
-];
-Calling your function should result in:
+]
+// ];
+// Calling your function should result in:
 
+// shoppingSummary(shoppingList); //"I got 3 items at $99.73"
+
+ function shoppingSummary(arrayOfObjects){
+var price= reduce(arrayOfObjects,function(sum,object){
+if((sum + object.price )<=100){
+    return sum+object.price
+
+}
+return + sum
+  },0)
+  return "I got 3 items at $"+price.toPrecision(4)
+}
 shoppingSummary(shoppingList); //"I got 3 items at $99.73"
-
-
 
 /*
 
@@ -98,3 +171,19 @@ Would return a new array with the following elements:
 
 //your answer is here
 
+function removeMostExpensive(arrayOfObjects){
+var mostexpensive =reduce(arrayOfObjects, function(max,element){
+    // console.log(max)
+    // console.log(element.price)
+if(max.price<element.price){
+max=element
+}
+return max
+  })
+  return filter(arrayOfObjects,function(object){
+return object !== mostexpensive
+
+  })
+  
+}
+removeMostExpensive(shoppingList);
